@@ -1,0 +1,63 @@
+import React, { Component, ErrorInfo, ReactNode } from 'react';
+
+interface Props {
+  children: ReactNode;
+}
+
+interface State {
+  hasError: boolean;
+  error: any;
+}
+
+class ErrorBoundary extends Component<Props, State> {
+  public state: State = {
+    hasError: false,
+    error: null,
+  };
+
+  public static getDerivedStateFromError(error: any): State {
+    return { hasError: true, error };
+  }
+
+  public componentDidCatch(error: any, errorInfo: ErrorInfo) {
+    console.error('Uncaught error:', error, errorInfo);
+  }
+
+  public render() {
+    if (this.state.hasError) {
+      let errorMessage = 'An unexpected error occurred.';
+      try {
+        const parsedError = JSON.parse(this.state.error.message);
+        if (parsedError.error && parsedError.operationType) {
+          errorMessage = `Firestore Error: ${parsedError.error} during ${parsedError.operationType} at ${parsedError.path || 'unknown path'}`;
+          if (parsedError.error.includes('Missing or insufficient permissions')) {
+            errorMessage += '. Please check security rules.';
+          }
+        } else {
+          errorMessage = this.state.error.message;
+        }
+      } catch (e) {
+        errorMessage = this.state.error.message || errorMessage;
+      }
+
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+          <div className="max-w-md w-full text-center">
+            <h1 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h1>
+            <p className="text-gray-600 mb-6">{errorMessage}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Reload Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return (this as any).props.children;
+  }
+}
+
+export default ErrorBoundary;
