@@ -43,6 +43,17 @@ export async function createServer() {
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
+  // Netlify strips /api/ from the path when calling the function.
+  // Re-add it so Express routes (which all start with /api/) match correctly.
+  if (process.env.NETLIFY) {
+    app.use((req, res, next) => {
+      if (!req.path.startsWith('/api/')) {
+        req.url = '/api' + req.url;
+      }
+      next();
+    });
+  }
+
   // API Routes
   
   // Supabase Health Check
@@ -346,6 +357,7 @@ export async function createServer() {
 
   app.post('/api/auth/login', async (req, res) => {
     const { userId, name } = req.body;
+    console.log(`Login attempt: userId="${userId}", name="${name}"`);
     try {
       const { data: userData, error: dbError } = await supabase
         .from('users')
@@ -354,8 +366,14 @@ export async function createServer() {
         .ilike('name', `%${name}%`)
         .single();
 
-      if (dbError || !userData) {
-        return res.status(401).json({ error: 'Invalid User ID or Name' });
+      if (dbError) {
+        console.error('Login DB error:', dbError);
+        return res.status(401).json({ error: 'Invalid User ID or Name', details: dbError.message });
+      }
+
+      if (!userData) {
+        console.error('Login: no user found');
+        return res.status(401).json({ error: 'Invalid User ID or Name', details: 'No matching user found' });
       }
 
       res.json({ success: true, user: userData });
@@ -432,8 +450,9 @@ ALTER TABLE public.users ADD COLUMN IF NOT EXISTS break_duration_mins INTEGER DE
     }
   });
 
-  // Vite middleware for development
-  if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  // Vite middleware for development ONLY (never in Netlify/Vercel/production)
+  const isDev = process.env.NODE_ENV !== 'production' && !process.env.VERCEL && !process.env.NETLIFY;
+  if (isDev) {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -450,6 +469,12 @@ ALTER TABLE public.users ADD COLUMN IF NOT EXISTS break_duration_mins INTEGER DE
       });
     }
   }
+
+  // Global error handler — prevents unhandled crashes from causing 502s
+  app.use((err: any, req: any, res: any, next: any) => {
+    console.error('Unhandled error:', err);
+    res.status(500).json({ error: 'Internal server error', message: err.message });
+  });
 
   return app;
 }
