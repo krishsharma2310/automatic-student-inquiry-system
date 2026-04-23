@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { supabase } from './supabase';
 import { User, UserRole } from './types';
 import ErrorBoundary from './components/ErrorBoundary';
 
-// Pages
-import StudentPortal from './pages/StudentPortal';
-import Login from './pages/Login';
-import AdminDashboard from './pages/AdminDashboard';
-import TeamLeadDashboard from './pages/TeamLeadDashboard';
-import CounsellorDashboard from './pages/CounsellorDashboard';
-import TransportPortal from './pages/TransportPortal';
+// Pages — lazy loaded for code splitting
+const StudentPortal = React.lazy(() => import('./pages/StudentPortal'));
+const Login = React.lazy(() => import('./pages/Login'));
+const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
+const TeamLeadDashboard = React.lazy(() => import('./pages/TeamLeadDashboard'));
+const CounsellorDashboard = React.lazy(() => import('./pages/CounsellorDashboard'));
+const TransportPortal = React.lazy(() => import('./pages/TransportPortal'));
 
 import { ThemeProvider } from './contexts/ThemeContext';
 import { RefreshProvider } from './contexts/RefreshContext';
@@ -236,32 +236,38 @@ const App: React.FC = () => {
       <ThemeProvider>
         <ErrorBoundary>
         <Router>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<StudentPortal />} />
-            <Route path="/transport" element={<TransportPortal />} />
-            <Route path="/login" element={user ? <DashboardRedirect /> : <Login onLogin={handleLogin} />} />
+          <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+          }>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<StudentPortal />} />
+              <Route path="/transport" element={<TransportPortal />} />
+              <Route path="/login" element={user ? <DashboardRedirect /> : <Login onLogin={handleLogin} />} />
 
-            {/* Protected Dashboard Routes */}
-            <Route path="/admin" element={
-              <ProtectedRoute allowedRoles={['admin', 'front_office']}>
-                <AdminDashboard user={user!} />
-              </ProtectedRoute>
-            } />
-            <Route path="/team-lead" element={
-              <ProtectedRoute allowedRoles={['team_lead']}>
-                <TeamLeadDashboard user={user!} />
-              </ProtectedRoute>
-            } />
-            <Route path="/counsellor" element={
-              <ProtectedRoute allowedRoles={['counsellor']}>
-                <CounsellorDashboard user={user!} />
-              </ProtectedRoute>
-            } />
+              {/* Protected Dashboard Routes */}
+              <Route path="/admin" element={
+                <ProtectedRoute allowedRoles={['admin', 'front_office']}>
+                  <AdminDashboard user={user!} />
+                </ProtectedRoute>
+              } />
+              <Route path="/team-lead" element={
+                <ProtectedRoute allowedRoles={['team_lead']}>
+                  <TeamLeadDashboard user={user!} />
+                </ProtectedRoute>
+              } />
+              <Route path="/counsellor" element={
+                <ProtectedRoute allowedRoles={['counsellor']}>
+                  <CounsellorDashboard user={user!} />
+                </ProtectedRoute>
+              } />
 
-            {/* Catch-all */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+              {/* Catch-all */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
         </Router>
       </ErrorBoundary>
     </ThemeProvider>
@@ -270,3 +276,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+

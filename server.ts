@@ -440,9 +440,8 @@ ALTER TABLE public.users ADD COLUMN IF NOT EXISTS break_duration_mins INTEGER DE
       appType: 'spa',
     });
     app.use(vite.middlewares);
-  } else {
-    // In Vercel, static files are served by the platform, 
-    // but we keep this for other production environments.
+  } else if (!process.env.NETLIFY) {
+    // Serve static files in non-Netlify/Vercel production environments
     const distPath = path.join(process.cwd(), 'dist');
     if (fs.existsSync(distPath)) {
       app.use(express.static(distPath));
@@ -455,8 +454,12 @@ ALTER TABLE public.users ADD COLUMN IF NOT EXISTS break_duration_mins INTEGER DE
   return app;
 }
 
-const app = await createServer();
-const PORT = 3000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// Only start the HTTP server when this file is executed directly (local dev / start)
+const isMainModule = process.argv[1]?.includes('server');
+if (isMainModule) {
+  const app = await createServer();
+  const PORT = parseInt(process.env.PORT || '3000', 10);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
