@@ -457,9 +457,10 @@ ALTER TABLE public.users ADD COLUMN IF NOT EXISTS break_duration_mins INTEGER DE
 // Only start the HTTP server when this file is executed directly (local dev / start)
 const isMainModule = process.argv[1]?.includes('server');
 if (isMainModule) {
-  const app = await createServer();
-  const PORT = parseInt(process.env.PORT || '3000', 10);
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+  createServer().then((app) => {
+    const PORT = parseInt(process.env.PORT || '3000', 10);
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
   });
 }
