@@ -450,16 +450,8 @@ ALTER TABLE public.users ADD COLUMN IF NOT EXISTS break_duration_mins INTEGER DE
     }
   });
 
-  // Vite middleware for development ONLY (never in Netlify/Vercel/production)
-  const isDev = process.env.NODE_ENV !== 'production' && !process.env.VERCEL && !process.env.NETLIFY;
-  if (isDev) {
-    const { createServer: createViteServer } = await import('vite');
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa',
-    });
-    app.use(vite.middlewares);
-  } else if (!process.env.NETLIFY) {
+  // Static files in non-Netlify production environments (Netlify serves these via CDN)
+  if (!process.env.NETLIFY) {
     // Serve static files in non-Netlify/Vercel production environments
     const distPath = path.join(process.cwd(), 'dist');
     if (fs.existsSync(distPath)) {
