@@ -1,0 +1,117 @@
+/* ============================================
+   CSS Custom Properties (Design Tokens)
+   ============================================ */
+
+:root {
+  /* Backgrounds */
+  --bg-body: #F8FAFC;
+  --bg-primary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-alt: #f8fafc;
+  --bg-input: #f1f5f9;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+  --bg-glass: rgba(255, 255, 255, 0.05);
+  --bg-mesh-g1: rgba(211, 47, 47, 0.15);
+  --bg-mesh-g2: rgba(25, 118, 210, 0.15);
+  --bg-mesh-g3: rgba(52, 168, 83, 0.1);
+  --bg-mesh-g4: rgba(251, 188, 5, 0.1);
+
+  /* Text */
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+
+  /* Borders */
+  --border-color: #e2e8f0;
+  --border-light: #f1f5f9;
+  --border-focus: #D32F2F;
+
+  /* Accents */
+  --accent-red: #D32F2F;
+  --accent-red-hover: #B71C1C;
+  --accent-blue: #1976D2;
+  --accent-blue-hover: #1565C0;
+  --accent-green: #4CAF50;
+  --accent-green-hover: #43A047;
+  --accent-orange: #F97316;
+  --accent-purple: #9333ea;
+  --accent-emerald: #10b981;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-red: 0 10px 15px -3px rgba(211, 47, 47, 0.2);
+  --shadow-blue: 0 10px 15px -3px rgba(25, 118, 210, 0.2);
+
+  /* Status */
+  --status-pending-bg: #eff6ff;
+  --status-pending-text: #2563eb;
+  --status-progress-bg: #fffbeb;
+  --status-progress-text: #d97706;
+  --status-completed-bg: #ecfdf5;
+  --status-completed-text: #059669;
+  --status-error-bg: #fef2f2;
+  --status-error-text: #dc2626;
+  --status-success-bg: #f0fdf4;
+  --status-success-text: #16a34a;
+  --status-warning-bg: #fffbeb;
+  --status-warning-text: #b45309;
+}
+
+.dark {
+  /* Backgrounds */
+  --bg-body: #020617;
+  --bg-primary: #050B2C;
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --bg-card-alt: rgba(255, 255, 255, 0.03);
+  --bg-input: rgba(255, 255, 255, 0.05);
+  --bg-overlay: rgba(0, 0, 0, 0.6);
+  --bg-glass: rgba(255, 255, 255, 0.05);
+  --bg-mesh-g1: rgba(211, 47, 47, 0.15);
+  --bg-mesh-g2: rgba(25, 118, 210, 0.08);
+  --bg-mesh-g3: rgba(52, 168, 83, 0.05);
+  --bg-mesh-g4: rgba(251, 188, 5, 0.05);
+
+  /* Text */
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  --text-inverse: #0f172a;
+
+  /* Borders */
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-light: rgba(255, 255, 255, 0.05);
+  --border-focus: rgba(211, 47, 47, 0.5);
+
+  /* Accents stay the same or slightly adjusted */
+  --accent-red: #D32F2F;
+  --accent-red-hover: #ef4444;
+  --accent-blue: #60a5fa;
+  --accent-blue-hover: #3b82f6;
+
+  /* Shadows in dark mode are more subtle/diffused */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6);
+  --shadow-red: 0 10px 15px -3px rgba(244, 63, 94, 0.3);
+  --shadow-blue: 0 10px 15px -3px rgba(96, 165, 250, 0.3);
+
+  /* Status */
+  --status-pending-bg: rgba(59, 130, 246, 0.1);
+  --status-pending-text: #60a5fa;
+  --status-progress-bg: rgba(245, 158, 11, 0.1);
+  --status-progress-text: #fbbf24;
+  --status-completed-bg: rgba(16, 185, 129, 0.1);
+  --status-completed-text: #34d399;
+  --status-error-bg: rgba(239, 68, 68, 0.1);
+  --status-error-text: #f87171;
+  --status-success-bg: rgba(34, 197, 94, 0.1);
+  --status-success-text: #4ade80;
+  --status-warning-bg: rgba(245, 158, 11, 0.1);
+  --status-warning-text: #fbbf24;
+}
+

@@ -1,0 +1,210 @@
+/* ============================================
+   BusRoster Component Styles
+   ============================================ */
+
+.roster-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+  overflow-y: auto;
+}
+
+.roster-modal {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  max-width: 48rem;
+  width: 100%;
+  padding: 2rem;
+  position: relative;
+}
+
+@media print {
+  .roster-modal {
+    padding: 0;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  .roster-overlay {
+    background: none;
+    backdrop-filter: none;
+    position: static;
+    padding: 0;
+  }
+}
+
+.roster-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+}
+.roster-close-btn:hover {
+  background-color: #f3f4f6;
+}
+@media print {
+  .roster-close-btn {
+    display: none;
+  }
+}
+
+.roster-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.roster-header h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+  color: #000;
+}
+
+.roster-header p {
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+  color: #000;
+}
+
+.roster-header .roster-date {
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-transform: uppercase;
+  margin-top: 1rem;
+  color: #000;
+}
+
+.roster-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 3px solid black;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.roster-table td {
+  border: 2px solid black;
+  padding: 0.5rem;
+}
+
+.roster-table .roster-yellow {
+  background-color: #ffff00;
+}
+
+.roster-table .roster-route-name {
+  text-align: center;
+  color: #dc2626;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.roster-table .roster-driver-name {
+  text-align: center;
+  font-size: 1.125rem;
+}
+
+.roster-table .roster-reg-no {
+  text-align: center;
+  font-size: 1.125rem;
+}
+
+.roster-table .roster-helper {
+  text-align: center;
+  font-size: 1.125rem;
+}
+
+.roster-table .roster-phone {
+  text-align: center;
+  font-size: 1.125rem;
+}
+
+.roster-table .roster-time {
+  text-align: center;
+  font-size: 1.125rem;
+}
+
+.roster-table .roster-col-header {
+  text-align: center;
+  width: 4rem;
+}
+
+.roster-table .roster-stop-name {
+  padding: 0.75rem;
+  font-style: italic;
+  font-family: serif;
+  font-size: 1.125rem;
+  font-weight: 900;
+}
+
+.roster-table .roster-pickup-time {
+  text-align: center;
+  font-size: 1.5rem;
+  font-style: italic;
+  font-family: serif;
+  font-weight: 900;
+}
+
+.roster-table .roster-drop-time {
+  text-align: center;
+  color: #dc2626;
+  font-size: 1.125rem;
+  font-weight: 900;
+}
+
+.roster-table .roster-footer {
+  text-align: center;
+  font-size: 1.875rem;
+  font-weight: 900;
+}
+
+.roster-table tbody tr:not(.roster-yellow):hover {
+  background-color: #f9fafb;
+  transition: background-color 0.2s;
+}
+
+.roster-print-btn-wrap {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+@media print {
+  .roster-print-btn-wrap {
+    display: none;
+  }
+}
+
+.roster-print-btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.roster-print-btn:hover {
+  background-color: #1d4ed8;
+}
+

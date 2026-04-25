@@ -6,6 +6,7 @@ import { Users, Search, BarChart3, Clock, CheckCircle2, AlertCircle, ChevronRigh
 import { downloadCSV } from '../utils/csvExport';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTheme } from '../contexts/ThemeContext';
+import '../styles/pages/TeamLeadDashboard.css';
 
 interface TeamLeadDashboardProps {
   user: User;

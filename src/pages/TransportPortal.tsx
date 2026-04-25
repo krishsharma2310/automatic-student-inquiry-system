@@ -8,6 +8,7 @@ import BusRoster from '../components/BusRoster';
 import { useTheme } from '../contexts/ThemeContext';
 import { useRefresh } from '../contexts/RefreshContext';
 import { Link } from 'react-router-dom';
+import '../styles/pages/TransportPortal.css';
 
 const TransportPortal: React.FC = () => {
   const { theme } = useTheme();

@@ -9,6 +9,7 @@ import BusRoster from '../components/BusRoster';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { useTheme } from '../contexts/ThemeContext';
 import { useRefresh } from '../contexts/RefreshContext';
+import '../styles/pages/AdminDashboard.css';
 
 interface AdminDashboardProps {
   user: User;

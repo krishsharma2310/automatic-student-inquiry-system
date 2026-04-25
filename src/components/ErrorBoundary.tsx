@@ -1,53 +1,103 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+/**
+ * ErrorBoundary
+ * ------------------------------------------------------------------
+ * Global React error boundary for catching render/runtime errors.
+ */
 
-interface Props {
+import React, { Component, ErrorInfo, ReactNode } from 'react';
+import '../styles/components/ErrorBoundary.css';
+
+/* ------------------------------------------------------------------
+ * Types
+ * ------------------------------------------------------------------ */
+
+interface ErrorBoundaryProps {
   children: ReactNode;
 }
 
-interface State {
+interface ErrorBoundaryState {
   hasError: boolean;
-  error: any;
+  error: Error | null;
 }
 
-class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
+/* ------------------------------------------------------------------
+ * Helpers
+ * ------------------------------------------------------------------ */
+
+function getErrorMessage(error: Error | null): string {
+  if (!error?.message) {
+    return 'An unexpected error occurred.';
+  }
+
+  try {
+    const parsed = JSON.parse(error.message);
+
+    if (parsed?.error && parsed?.operationType) {
+      let message = `Firestore Error: ${parsed.error} during ${parsed.operationType}`;
+
+      if (parsed.path) {
+        message += ` at ${parsed.path}`;
+      }
+
+      if (
+        typeof parsed.error === 'string' &&
+        parsed.error.includes('Missing or insufficient permissions')
+      ) {
+        message += '. Please check security rules.';
+      }
+
+      return message;
+    }
+
+    return error.message;
+  } catch {
+    return error.message;
+  }
+}
+
+/* ------------------------------------------------------------------
+ * Component
+ * ------------------------------------------------------------------ */
+
+class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
+  public state: ErrorBoundaryState = {
     hasError: false,
     error: null,
   };
 
-  public static getDerivedStateFromError(error: any): State {
-    return { hasError: true, error };
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return {
+      hasError: true,
+      error,
+    };
   }
 
-  public componentDidCatch(error: any, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('[ErrorBoundary]', error, errorInfo);
   }
 
-  public render() {
+  render() {
     if (this.state.hasError) {
-      let errorMessage = 'An unexpected error occurred.';
-      try {
-        const parsedError = JSON.parse(this.state.error.message);
-        if (parsedError.error && parsedError.operationType) {
-          errorMessage = `Firestore Error: ${parsedError.error} during ${parsedError.operationType} at ${parsedError.path || 'unknown path'}`;
-          if (parsedError.error.includes('Missing or insufficient permissions')) {
-            errorMessage += '. Please check security rules.';
-          }
-        } else {
-          errorMessage = this.state.error.message;
-        }
-      } catch (e) {
-        errorMessage = this.state.error.message || errorMessage;
-      }
+      const message = getErrorMessage(this.state.error);
 
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-          <div className="max-w-md w-full text-center">
-            <h1 className="text-2xl font-bold text-red-600 mb-4">Something went wrong</h1>
-            <p className="text-gray-600 mb-6">{errorMessage}</p>
+        <div className="error-boundary">
+          <div className="error-boundary-card">
+            <h1 className="error-boundary-title">
+              Something went wrong
+            </h1>
+
+            <p className="error-boundary-message">
+              {message}
+            </p>
+
             <button
+              type="button"
               onClick={() => window.location.reload()}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="error-boundary-btn"
             >
               Reload Page
             </button>
@@ -56,8 +106,9 @@ class ErrorBoundary extends Component<Props, State> {
       );
     }
 
-    return (this as any).props.children;
+    return this.props.children;
   }
 }
 
 export default ErrorBoundary;
+

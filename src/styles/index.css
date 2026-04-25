@@ -1,0 +1,62 @@
+@import "tailwindcss";
+@import "./theme.css";
+@import "./animations.css";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply antialiased;
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+  }
+}
+
+@layer utilities {
+  .glass {
+    background-color: var(--bg-glass);
+    backdrop-blur: 12px;
+    border: 1px solid var(--border-color);
+  }
+
+  .glass-dark {
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-blur: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .glow-red {
+    box-shadow: 0 0 20px rgba(211, 47, 47, 0.2);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 20px rgba(25, 118, 210, 0.2);
+  }
+
+  .text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(to right, white, #e2e8f0, #94a3b8);
+  }
+
+  .bg-mesh {
+    background-image:
+      radial-gradient(at 0% 0%, var(--bg-mesh-g1) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, var(--bg-mesh-g2) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, var(--bg-mesh-g3) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, var(--bg-mesh-g4) 0px, transparent 50%);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+

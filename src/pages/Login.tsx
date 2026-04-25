@@ -5,6 +5,7 @@ import Layout from '../components/Layout';
 import { LogIn, Mail, Lock, AlertCircle, Shield, CheckCircle2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useTheme } from '../contexts/ThemeContext';
+import '../styles/pages/Login.css';
 
 interface LoginProps {
   onLogin: (user: any) => void;
@@ -74,7 +75,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout (Supabase free tier may need time to wake up)
 
       const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -198,56 +199,11 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full ${theme === 'dark' ? 'bg-red-600 hover:bg-red-700 shadow-red-900/20' : 'bg-[#D32F2F] hover:bg-[#B71C1C] shadow-red-100'} text-white font-bold py-4 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg disabled:opacity-50 flex items-center justify-center space-x-2`}
+              className={`w-full ${theme === 'dark' ? 'bg-red-600 hover:bg-red-700 shadow-red-900/20' : 'bg-[#D32F2F] hover:bg-[#B71C1C] shadow-red-100'} text-white font-bold py-4 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg disabled:opacity-50`}
             >
-              {loading ? (
-                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              ) : (
-                <>
-                  <span>Sign In to Dashboard</span>
-                  <LogIn className="h-5 w-5" />
-                </>
-              )}
+              {loading ? 'Loading...' : 'Login to Account'}
             </button>
           </form>
-
-          {userId === '1001' && (
-            <div className={`mt-6 pt-6 border-t ${theme === 'dark' ? 'border-white/10' : 'border-gray-100'}`}>
-              <button
-                type="button"
-                onClick={handleBootstrap}
-                disabled={isBootstrapping}
-                className={`w-full ${theme === 'dark' ? 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10' : 'bg-gray-50 text-gray-600 border-gray-100 hover:bg-gray-100'} font-bold py-3 rounded-xl transition-all text-sm flex items-center justify-center space-x-2 border`}
-              >
-                <Shield className="h-4 w-4" />
-                <span>{isBootstrapping ? 'Setting up...' : 'First time? Setup Admin Account'}</span>
-              </button>
-            </div>
-          )}
-
-          <div className={`mt-8 pt-8 border-t ${theme === 'dark' ? 'border-white/10' : 'border-gray-100'}`}>
-            <h3 className={`text-sm font-bold ${theme === 'dark' ? 'text-slate-300' : 'text-gray-700'} uppercase tracking-wider mb-4`}>Troubleshooting</h3>
-            <div className={`space-y-3 text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
-              <p className="flex items-start space-x-2">
-                <span className={`rounded-full h-5 w-5 flex items-center justify-center flex-shrink-0 font-bold text-xs ${theme === 'dark' ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-600'}`}>1</span>
-                <span>All staff must use their 4-digit User ID and Name to log in.</span>
-              </p>
-              <p className="flex items-start space-x-2">
-                <span className={`rounded-full h-5 w-5 flex items-center justify-center flex-shrink-0 font-bold text-xs ${theme === 'dark' ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-600'}`}>2</span>
-                <span>Staff accounts will only be active AFTER the admin seeds the initial data.</span>
-              </p>
-              <p className="flex items-start space-x-2">
-                <span className={`rounded-full h-5 w-5 flex items-center justify-center flex-shrink-0 font-bold text-xs ${theme === 'dark' ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-600'}`}>3</span>
-                <span>Default Admin ID is <strong>1001</strong>.</span>
-              </p>
-            </div>
-          </div>
-
-          <div className={`mt-8 pt-8 border-t ${theme === 'dark' ? 'border-white/10' : 'border-gray-100'} text-center`}>
-            <p className={`text-sm ${theme === 'dark' ? 'text-slate-500' : 'text-gray-500'}`}>
-              Forgot your password? Please contact the Head Administrator.
-            </p>
-          </div>
         </motion.div>
       </div>
     </Layout>

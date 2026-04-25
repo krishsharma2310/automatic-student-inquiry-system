@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { supabase } from '../supabase';
+import React, { useEffect, useState } from 'react';
 import { LogIn, Shield, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useTheme } from '../contexts/ThemeContext';
+import '../styles/components/StaffLogin.css';
 
 interface StaffLoginProps {
   onLogin: (user: any) => void;
@@ -10,24 +10,28 @@ interface StaffLoginProps {
 
 const StaffLogin: React.FC<StaffLoginProps> = ({ onLogin }) => {
   const { theme } = useTheme();
+
   const [userId, setUserId] = useState('');
   const [name, setName] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isBootstrapping, setIsBootstrapping] = useState(false);
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [tableMissing, setTableMissing] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const checkHealth = async () => {
       try {
-        const response = await fetch('/api/supabase-health');
-        const result = await response.json();
-        if (result.status === 'error' && result.message.includes('relation "public.users" does not exist')) {
+        const res = await fetch('/api/supabase-health');
+        const result = await res.json();
+        if (
+          result.status === 'error' &&
+          result.message?.includes('relation "public.users" does not exist')
+        ) {
           setTableMissing(true);
         }
       } catch (err) {
-        console.error('Health check failed:', err);
+        console.error('Supabase health check failed:', err);
       }
     };
     checkHealth();
@@ -38,8 +42,8 @@ const StaffLogin: React.FC<StaffLoginProps> = ({ onLogin }) => {
     setError('');
     setSuccess('');
     try {
-      const response = await fetch('/api/admin/bootstrap', { method: 'POST' });
-      const result = await response.json();
+      const res = await fetch('/api/admin/bootstrap', { method: 'POST' });
+      const result = await res.json();
       if (result.success) {
         setSuccess('Admin account created successfully! You can now log in.');
       } else {
@@ -58,16 +62,13 @@ const StaffLogin: React.FC<StaffLoginProps> = ({ onLogin }) => {
     setLoading(true);
     setError('');
     setSuccess('');
-
     try {
-      const response = await fetch('/api/auth/login', {
+      const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, name }),
       });
-      
-      const result = await response.json();
-      
+      const result = await res.json();
       if (result.success) {
         onLogin({
           id: result.user.id,
@@ -79,12 +80,12 @@ const StaffLogin: React.FC<StaffLoginProps> = ({ onLogin }) => {
           assignedCourses: result.user.assigned_courses,
           mobileNo: result.user.mobile_no,
           photoURL: result.user.photo_url,
-          createdAt: result.user.created_at
+          createdAt: result.user.created_at,
         });
       } else {
         setError(result.error || 'Invalid User ID or Name');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Login error:', err);
       setError('Network error. Please try again.');
     } finally {
@@ -93,50 +94,50 @@ const StaffLogin: React.FC<StaffLoginProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="staff-login-container">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className={`${theme === 'dark' ? 'bg-slate-900/50 border-white/10' : 'bg-white border-slate-200 shadow-xl shadow-slate-200/50'} rounded-[2.5rem] p-8 md:p-10 border relative overflow-hidden`}
+        className="staff-login-card"
       >
-        <div className="text-center mb-8">
-          <div className={`p-4 rounded-2xl inline-block mb-4 ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50'}`}>
+        <div className="staff-login-header">
+          <div className="staff-login-icon-wrap">
             <LogIn className="h-8 w-8 text-[#D32F2F]" />
           </div>
-          <h2 className={`text-3xl font-black ${theme === 'dark' ? 'text-white' : 'text-slate-900'} tracking-tight`}>Staff Access</h2>
-          <p className={`${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'} mt-2 text-sm font-medium`}>Internal portal for KRMU staff</p>
+          <h2 className="staff-login-title">Staff Access</h2>
+          <p className="staff-login-subtitle">Internal portal for KRMU staff</p>
         </div>
 
         {error && (
-          <div className={`${theme === 'dark' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-red-50 text-red-600 border-red-100'} p-4 rounded-xl flex items-center space-x-3 mb-6 border`}>
+          <div className="staff-login-alert staff-login-alert--error">
             <AlertCircle className="h-5 w-5 flex-shrink-0" />
-            <p className="text-xs font-bold">{error}</p>
+            <p>{error}</p>
           </div>
         )}
 
         {success && (
-          <div className={`${theme === 'dark' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-green-50 text-green-600 border-green-100'} p-4 rounded-xl flex items-center space-x-3 mb-6 border`}>
+          <div className="staff-login-alert staff-login-alert--success">
             <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
-            <p className="text-xs font-bold">{success}</p>
+            <p>{success}</p>
           </div>
         )}
 
         {tableMissing && (
-          <div className={`${theme === 'dark' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-amber-50 text-amber-700 border-amber-100'} p-4 rounded-xl flex items-start space-x-3 mb-6 border`}>
-            <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5" />
+          <div className="staff-login-alert staff-login-alert--warning">
+            <AlertCircle className="h-5 w-5 flex-shrink-0" />
             <div>
               <p className="text-xs font-bold">Database Tables Missing</p>
-              <p className="text-[10px] mt-1">Please run the SQL Script in your Supabase SQL Editor.</p>
+              <p className="text-[10px]">Please run the SQL script in Supabase SQL Editor.</p>
             </div>
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-5">
-          <div className="space-y-2">
-            <label className={`text-[11px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>User ID (4 Digits)</label>
-            <div className="relative">
-              <Shield className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+        <form onSubmit={handleLogin} className="staff-login-form">
+          <div className="staff-login-field">
+            <label className="staff-login-label">User ID (4 Digits)</label>
+            <div className="staff-login-input-wrap">
+              <Shield className="h-5 w-5" />
               <input
                 required
                 type="text"
@@ -144,34 +145,33 @@ const StaffLogin: React.FC<StaffLoginProps> = ({ onLogin }) => {
                 pattern="\d{4}"
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
-                className={`w-full pl-12 pr-4 py-4 rounded-2xl border ${theme === 'dark' ? 'bg-white/5 border-white/10 text-white focus:border-red-500/50' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white focus:border-[#D32F2F]'} outline-none transition-all font-bold`}
                 placeholder="e.g. 1001"
+                className="staff-login-input"
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className={`text-[11px] font-black uppercase tracking-widest ${theme === 'dark' ? 'text-slate-500' : 'text-slate-400'}`}>Full Name</label>
-            <div className="relative">
-              <LogIn className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+          <div className="staff-login-field">
+            <label className="staff-login-label">Full Name</label>
+            <div className="staff-login-input-wrap">
+              <LogIn className="h-5 w-5" />
               <input
                 required
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className={`w-full pl-12 pr-4 py-4 rounded-2xl border ${theme === 'dark' ? 'bg-white/5 border-white/10 text-white focus:border-red-500/50' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white focus:border-[#D32F2F]'} outline-none transition-all font-bold`}
                 placeholder="Enter your name"
+                className="staff-login-input"
               />
             </div>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full bg-[#D32F2F] hover:bg-[#B71C1C] text-white font-black py-5 rounded-2xl transition-all shadow-xl shadow-red-500/20 disabled:opacity-50 flex items-center justify-center space-x-2`}
-          >
+          <button type="submit" disabled={loading} className="staff-login-btn">
             {loading ? (
-              <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <>
+                <span className="staff-login-spinner" />
+                <span>Signing In...</span>
+              </>
             ) : (
               <>
                 <span>Sign In to Dashboard</span>
@@ -182,12 +182,12 @@ const StaffLogin: React.FC<StaffLoginProps> = ({ onLogin }) => {
         </form>
 
         {userId === '1001' && (
-          <div className="mt-6 pt-6 border-t border-white/5">
+          <div className="staff-login-bootstrap">
             <button
               type="button"
               onClick={handleBootstrap}
               disabled={isBootstrapping}
-              className={`w-full ${theme === 'dark' ? 'bg-white/5 text-slate-400 hover:bg-white/10' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'} font-bold py-3 rounded-xl transition-all text-xs flex items-center justify-center space-x-2 border border-transparent`}
+              className="staff-login-bootstrap-btn"
             >
               <Shield className="h-4 w-4" />
               <span>{isBootstrapping ? 'Setting up...' : 'Setup Admin Account'}</span>
@@ -200,3 +200,4 @@ const StaffLogin: React.FC<StaffLoginProps> = ({ onLogin }) => {
 };
 
 export default StaffLogin;
+

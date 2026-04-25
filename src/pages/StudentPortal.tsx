@@ -16,6 +16,7 @@ const INDIAN_STATES = [
 const CATEGORIES = ["General", "OBC", "SC/ST", "Other"];
 
 import { useNavigate } from 'react-router-dom';
+import '../styles/pages/StudentPortal.css';
 
 const StudentPortal: React.FC = () => {
   const { theme } = useTheme();

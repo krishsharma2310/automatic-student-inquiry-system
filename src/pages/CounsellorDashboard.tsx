@@ -6,6 +6,7 @@ import { Clock, Play, Square, CheckCircle2, AlertCircle, MessageSquare, User as 
 import { downloadCSV } from '../utils/csvExport';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTheme } from '../contexts/ThemeContext';
+import '../styles/pages/CounsellorDashboard.css';
 
 interface CounsellorDashboardProps {
   user: User;

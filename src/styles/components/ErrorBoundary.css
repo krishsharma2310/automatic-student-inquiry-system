@@ -1,0 +1,45 @@
+/* ============================================
+   ErrorBoundary Component Styles
+   ============================================ */
+
+.error-boundary {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9fafb;
+  padding: 0 1rem;
+}
+
+.error-boundary-card {
+  max-width: 28rem;
+  width: 100%;
+  text-align: center;
+}
+
+.error-boundary-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #dc2626;
+  margin-bottom: 1rem;
+}
+
+.error-boundary-message {
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+}
+
+.error-boundary-btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+.error-boundary-btn:hover {
+  background-color: #1d4ed8;
+}
+
